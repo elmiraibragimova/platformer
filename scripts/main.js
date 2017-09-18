@@ -132,3 +132,17 @@ class Vector {
     return new Vector(this.x * factor, this.y * factor);
   }
 }
+
+
+const otherSprites = document.createElement('img');
+otherSprites.src = 'img/sprites.png';
+
+const playerSprites = document.createElement('img');
+playerSprites.src = 'img/player.png';
+const playerXOverlap = 4;
+
+function flipHorizontally(context, around) {
+  context.translate(around, 0);
+  context.scale(-1, 1);
+  context.translate(-around, 0);
+}
