@@ -146,3 +146,9 @@ function flipHorizontally(context, around) {
   context.scale(-1, 1);
   context.translate(-around, 0);
 }
+
+const actorChars = {
+  '@': Player,
+  'o': Coin,
+  '=': Lava, '|': Lava, 'v': Lava
+};
