@@ -134,6 +134,74 @@ class Vector {
 }
 
 
+class Player {
+  constructor(pos) {
+    this.pos = pos.plus(new Vector(0, -0.5));
+    this.size = new Vector(0.8, 1.5);
+    this.speed = new Vector(0, 0);
+    this.type = 'player';
+  }
+
+  moveX(step, level, keys) {
+    this.speed.x = 0;
+    if (keys.left) this.speed.x -= playerXSpeed;
+    if (keys.right) this.speed.x += playerXSpeed;
+
+    let motion = new Vector(this.speed.x * step, 0);
+    let newPos = this.pos.plus(motion);
+    let obstacle = level.obstacleAt(newPos, this.size);
+    if (obstacle) {
+      level.playerTouched(obstacle);
+    } else {
+      this.pos = newPos;
+    }
+  }
+
+  moveY(step, level, keys) {
+    this.speed.y += step * gravity;
+    let motion = new Vector(0, this.speed.y * step);
+    let newPos = this.pos.plus(motion);
+    let obstacle = level.obstacleAt(newPos, this.size);
+
+    if (obstacle) {
+      level.playerTouched(obstacle);
+
+      if (keys.up && this.speed.y > 0) {
+        this.speed.y = -jumpSpeed;
+      } else {
+        this.speed.y = 0;
+      }
+
+    } else {
+      this.pos = newPos;
+    }
+  }
+
+  act(step, level, keys) {
+    this.moveX(step, level, keys);
+    this.moveY(step, level, keys);
+
+    let otherActor = level.actorAt(this);
+    if (otherActor) {
+      level.playerTouched(otherActor.type, otherActor);
+    }
+
+    if (level.status == 'lost') {
+      this.pos.y += step;
+      this.size.y -= step;
+    }
+  }
+}
+
+const actorChars = {
+  '@': Player,
+  'o': Coin,
+  '=': Lava, '|': Lava, 'v': Lava
+};
+
+
+
+
 const otherSprites = document.createElement('img');
 otherSprites.src = 'img/sprites.png';
 
@@ -146,9 +214,3 @@ function flipHorizontally(context, around) {
   context.scale(-1, 1);
   context.translate(-around, 0);
 }
-
-const actorChars = {
-  '@': Player,
-  'o': Coin,
-  '=': Lava, '|': Lava, 'v': Lava
-};
