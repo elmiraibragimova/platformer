@@ -310,10 +310,10 @@ const actorChars = {
 };
 
 const otherSprites = document.createElement('img');
-otherSprites.src = 'img/sprites.png';
+otherSprites.src = 'imgages/sprites.png';
 
 const playerSprites = document.createElement('img');
-playerSprites.src = 'img/player.png';
+playerSprites.src = 'imgages/player.png';
 const playerXOverlap = 4;
 
 function flipHorizontally(context, around) {
