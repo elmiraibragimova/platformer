@@ -235,6 +235,75 @@ class Coin {
   }
 }
 
+function trackKeys(codes) {
+  let pressed = Object.create(null);
+
+  function handler(event) {
+    if (codes.hasOwnProperty(event.keyCode)) {
+      let down = event.type == 'keydown';
+      pressed[codes[event.keyCode]] = down;
+      event.preventDefault();
+    }
+  }
+  addEventListener('keydown', handler);
+  addEventListener('keyup', handler);
+  return pressed;
+}
+
+function runAnimation(frameFunc) {
+  let lastTime = null;
+
+  function frame(time) {
+    let stop = false;
+    if (lastTime != null) {
+      let timeStep = Math.min(time - lastTime, 100) / 1000;
+      stop = frameFunc(timeStep) === false;
+    }
+
+    lastTime = time;
+    if (!stop) {
+      requestAnimationFrame(frame);
+    }
+  }
+  requestAnimationFrame(frame);
+}
+
+const arrows = trackKeys(arrowCodes);
+
+function runLevel(level, Display, andThen) {
+  let display = new Display(document.body, level);
+
+  runAnimation(step => {
+    level.animate(step, arrows);
+    display.drawFrame(step);
+    if (level.isFinished()) {
+      display.clear();
+
+      if (andThen) {
+        andThen(level.status);
+      }
+
+      return false;
+    }
+  });
+}
+
+function runGame(plans, Display) {
+  function startLevel(n) {
+    runLevel(new Level(plans[n]), Display, status => {
+      if (status == 'lost') {
+        startLevel(n);
+      } else if (n < plans.length - 1) {
+        startLevel(n + 1);
+      } else {
+        console.log('You win!');
+      }
+    });
+  }
+  startLevel(0);
+}
+
+
 const actorChars = {
   '@': Player,
   'o': Coin,
