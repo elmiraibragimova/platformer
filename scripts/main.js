@@ -193,6 +193,48 @@ class Player {
   }
 }
 
+class Lava {
+  constructor(pos, ch) {
+    this.pos = pos;
+    this.size = new Vector(1, 1);
+    this.type = 'lava';
+    if (ch == '=') {
+      this.speed = new Vector(2, 0);
+    } else if (ch == '|') {
+      this.speed = new Vector(0, 2);
+    } else if (ch == 'v') {
+      this.speed = new Vector(0, 3);
+      this.repeatPos = pos;
+    }
+  }
+
+  act(step, level) {
+    let newPos = this.pos.plus(this.speed.times(step));
+    if (!level.obstacleAt(newPos, this.size)) {
+      this.pos = newPos;
+    } else if (this.repeatPos) {
+      this.pos = this.repeatPos;
+    } else {
+      this.speed = this.speed.times(-1);
+    }
+  }
+}
+
+class Coin {
+  constructor(pos) {
+    this.basePos = this.pos = pos.plus(new Vector(0.2, 0.1));
+    this.size = new Vector(0.6, 0.6);
+    this.wobble = Math.random() * Math.PI * 2;
+    this.type = 'coin';
+  }
+
+  act(step) {
+    this.wobble += step * wobbleSpeed;
+    let wobblePos = Math.sin(this.wobble) * wobbleDist;
+    this.pos = this.basePos.plus(new Vector(0, wobblePos));
+  }
+}
+
 const actorChars = {
   '@': Player,
   'o': Coin,
