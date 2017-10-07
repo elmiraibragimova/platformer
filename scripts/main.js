@@ -119,6 +119,7 @@ class Level {
   }
 }
 
+
 class Vector {
   constructor(x, y) {
     this.x = x; this.y = y;
@@ -132,6 +133,8 @@ class Vector {
     return new Vector(this.x * factor, this.y * factor);
   }
 }
+
+
 
 
 class Player {
@@ -235,6 +238,7 @@ class Coin {
   }
 }
 
+
 function trackKeys(codes) {
   let pressed = Object.create(null);
 
@@ -310,10 +314,10 @@ const actorChars = {
 };
 
 const otherSprites = document.createElement('img');
-otherSprites.src = 'imgages/sprites.png';
+otherSprites.src = 'images/sprites.png';
 
 const playerSprites = document.createElement('img');
-playerSprites.src = 'imgages/player.png';
+playerSprites.src = 'images/player.png';
 const playerXOverlap = 4;
 
 function flipHorizontally(context, around) {
@@ -321,6 +325,8 @@ function flipHorizontally(context, around) {
   context.scale(-1, 1);
   context.translate(-around, 0);
 }
+
+
 
 class CanvasDisplay {
   constructor(parent, level) {
